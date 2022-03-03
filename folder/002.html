@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta
+      name="viewport"
+      content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes"
+    />
+    <meta name="theme-color" content="#4F7DC9" />
+    <meta charset="UTF-8" />
+    <title>
+      [Datacamp] Data Manipulation with pandas - Aggregating DataFrames
+    </title>
+    <link
+      rel="stylesheet"
+      href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono"
+    />
+    <link
+      rel="stylesheet"
+      href="//fonts.googleapis.com/icon?family=Material+Icons"
+    />
+    <link
+      rel="stylesheet"
+      href="https://storage.googleapis.com/codelab-elements/codelab-elements.css"
+    />
+    <style>
+      .success {
+        color: #1e8e3e;
+      }
+      .error {
+        color: red;
+      }
+    </style>
+    <script
+      type="text/javascript"
+      src="//cdn.datacamp.com/dcl-react.js.gz"
+    ></script>
+  </head>
+  <body>
+    <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+    <google-codelab
+      codelab-gaid=""
+      id="datacamp-data-manipulation-with-pandas-aggregating-dataframes"
+      title="[Datacamp] Data Manipulation with pandas - Aggregating DataFrames"
+      environment="web"
+      feedback-link=""
+    >
+      <google-codelab-step label="Summary statistics" duration="0">
+        <p>video</p>
+      </google-codelab-step>
+
+      <google-codelab-step label="Mean and median" duration="0">
+        <pre><code># Print the head of the sales DataFrame
+print(sales.head())
+
+# Print the info about the sales DataFrame
+print(sales.info())
+
+# Print the mean of weekly_sales
+print(sales[&#34;weekly_sales&#34;].mean())
+
+# Print the median of weekly_sales
+print(sales[&#34;weekly_sales&#34;].median())</code></pre>
+      </google-codelab-step>
+
+      <google-codelab-step label="Summarizing dates" duration="0">
+        <pre><code># Print the maximum of the date column
+print(sales[&#34;date&#34;].max())
+
+# Print the minimum of the date column
+print(sales[&#34;date&#34;].min())</code></pre>
+
+        Hello
+
+        <div data-datacamp-exercise data-lang="r">
+          <code data-type="pre-exercise-code">
+            # This will get executed each time the exercise gets initialized b =
+            6
+          </code>
+          <code data-type="sample-code">
+            # Create a variable a, equal to 5 # Print out a
+          </code>
+          <code data-type="solution">
+            # Create a variable a, equal to 5 a <- 5 # Print out a print(a)
+          </code>
+          <code data-type="sct">
+            test_object("a") test_function("print") success_msg("Great job!")
+          </code>
+          <div data-type="hint">
+            Use the assignment operator (<code><-</code>) to create the variable
+            <code>a</code>.
+          </div>
+        </div>
+      </google-codelab-step>
+
+      <google-codelab-step label="Efficient summaries" duration="0">
+        <pre><code># A custom IQR function
+def iqr(column):
+    return column.quantile(0.75) - column.quantile(0.25)
+    
+# Print IQR of the temperature_c column
+print(sales[&#34;temperature_c&#34;].agg(iqr))</code></pre>
+        <pre><code># A custom IQR function
+def iqr(column):
+    return column.quantile(0.75) - column.quantile(0.25)
+
+# Update to print IQR of temperature_c, fuel_price_usd_per_l, &amp; unemployment
+print(sales[[&#34;temperature_c&#34;, &#39;fuel_price_usd_per_l&#39;, &#39;unemployment&#39;]].agg(iqr))</code></pre>
+        <pre><code># Import NumPy and create custom IQR function
+import numpy as np
+def iqr(column):
+    return column.quantile(0.75) - column.quantile(0.25)
+
+# Update to print IQR and median of temperature_c, fuel_price_usd_per_l, &amp; unemployment
+print(sales[[&#34;temperature_c&#34;, &#34;fuel_price_usd_per_l&#34;, &#34;unemployment&#34;]].agg([iqr,np.median]))</code></pre>
+      </google-codelab-step>
+
+      <google-codelab-step label="Cumulative statistics" duration="0">
+        <pre><code># Sort sales_1_1 by date
+sales_1_1 = sales_1_1.sort_values(&#34;date&#34;)
+
+# Get the cumulative sum of weekly_sales, add as cum_weekly_sales col
+sales_1_1[&#34;cum_weekly_sales&#34;] = sales_1_1[&#34;weekly_sales&#34;].cumsum()
+
+# Get the cumulative max of weekly_sales, add as cum_max_sales col
+sales_1_1[&#34;cum_max_sales&#34;] = sales_1_1[&#34;weekly_sales&#34;].cummax()
+
+# See the columns you calculated
+print(sales_1_1[[&#34;date&#34;, &#34;weekly_sales&#34;, &#34;cum_weekly_sales&#34;, &#34;cum_max_sales&#34;]])</code></pre>
+      </google-codelab-step>
+
+      <google-codelab-step label="Counting" duration="0">
+        <p>video</p>
+      </google-codelab-step>
+
+      <google-codelab-step label="Dropping duplicates" duration="0">
+        <pre><code># Drop duplicate store/type combinations
+store_types = sales.drop_duplicates(subset=[&#34;store&#34;, &#34;type&#34;])
+print(store_types.head())
+
+# Drop duplicate store/department combinations
+store_depts = sales.drop_duplicates(subset=[&#34;store&#34;, &#34;department&#34;])
+print(store_depts.head())
+
+# Subset the rows where is_holiday is True and drop duplicate dates
+holiday_dates = sales[sales[&#34;is_holiday&#34;]].drop_duplicates(subset=&#34;date&#34;)
+
+# Print date col of holiday_dates
+print(holiday_dates[&#34;date&#34;])</code></pre>
+      </google-codelab-step>
+
+      <google-codelab-step label="Counting categorical variables" duration="0">
+        <pre><code># Count the number of stores of each type
+store_counts = store_types[&#34;type&#34;].value_counts()
+print(store_counts)
+
+# Get the proportion of stores of each type
+store_props = store_types[&#34;type&#34;].value_counts(normalize=True)
+print(store_props)
+
+# Count the number of each department number and sort
+dept_counts_sorted = store_depts[&#34;department&#34;].value_counts(sort=True)
+print(dept_counts_sorted)
+
+# Get the proportion of departments of each number and sort
+dept_props_sorted = store_depts[&#34;department&#34;].value_counts(sort=True, normalize=True)
+print(dept_props_sorted)</code></pre>
+      </google-codelab-step>
+
+      <google-codelab-step label="Grouped summary statistics" duration="0">
+        <p>video</p>
+      </google-codelab-step>
+
+      <google-codelab-step
+        label="What percent of sales occurred at each store type?"
+        duration="0"
+      >
+        <pre><code># Calc total weekly sales
+sales_all = sales[&#34;weekly_sales&#34;].sum()
+
+# Subset for type A stores, calc total weekly sales
+sales_A = sales[sales[&#34;type&#34;] == &#34;A&#34;][&#34;weekly_sales&#34;].sum()
+
+# Subset for type B stores, calc total weekly sales
+sales_B = sales[sales[&#34;type&#34;] == &#34;B&#34;][&#34;weekly_sales&#34;].sum()
+
+# Subset for type C stores, calc total weekly sales
+sales_C = sales[sales[&#34;type&#34;] == &#34;C&#34;][&#34;weekly_sales&#34;].sum()
+
+# Get proportion for each type
+sales_propn_by_type = [sales_A, sales_B, sales_C] / sales_all
+print(sales_propn_by_type)</code></pre>
+      </google-codelab-step>
+
+      <google-codelab-step label="Calculations with .groupby()" duration="0">
+        <pre><code># Group by type; calc total weekly sales
+sales_by_type = sales.groupby(&#34;type&#34;)[&#34;weekly_sales&#34;].sum()
+
+# Get proportion for each type
+sales_propn_by_type = sales_by_type / sum(sales_by_type)
+print(sales_propn_by_type)</code></pre>
+        <pre><code># From previous step
+sales_by_type = sales.groupby(&#34;type&#34;)[&#34;weekly_sales&#34;].sum()
+
+# Group by type and is_holiday; calc total weekly sales
+sales_by_type_is_holiday = sales.groupby([&#34;type&#34;, &#34;is_holiday&#34;])[&#34;weekly_sales&#34;].sum()
+print(sales_by_type_is_holiday)</code></pre>
+      </google-codelab-step>
+
+      <google-codelab-step label="Multiple grouped summaries" duration="0">
+        <pre><code># Import numpy with the alias np
+import numpy as np
+
+# For each store type, aggregate weekly_sales: get min, max, mean, and median
+sales_stats = sales.groupby(&#34;type&#34;)[&#34;weekly_sales&#34;].agg([np.min, np.max, np.mean, np.median])
+
+# Print sales_stats
+print(sales_stats)
+
+# For each store type, aggregate unemployment and fuel_price_usd_per_l: get min, max, mean, and median
+unemp_fuel_stats = sales.groupby(&#34;type&#34;)[[&#34;unemployment&#34;, &#34;fuel_price_usd_per_l&#34;]].agg([np.min, np.max, np.mean, np.median])
+
+# Print unemp_fuel_stats
+print(unemp_fuel_stats)</code></pre>
+      </google-codelab-step>
+
+      <google-codelab-step label="Pivot tables" duration="0">
+        <p>video</p>
+      </google-codelab-step>
+
+      <google-codelab-step label="Pivoting on one variable" duration="0">
+        <pre><code># Pivot for mean weekly_sales for each store type
+mean_sales_by_type = sales.pivot_table(values=&#34;weekly_sales&#34;, index=&#34;type&#34;)
+
+# Print mean_sales_by_type
+print(mean_sales_by_type)</code></pre>
+        <pre><code># Import NumPy as np
+import numpy as np
+
+# Pivot for mean and median weekly_sales for each store type
+mean_med_sales_by_type = sales.pivot_table(values=&#34;weekly_sales&#34;, index=&#34;type&#34;, aggfunc=[np.mean, np.median])
+
+# Print mean_med_sales_by_type
+print(mean_med_sales_by_type)</code></pre>
+        <pre><code># Pivot for mean weekly_sales by store type and holiday 
+mean_sales_by_type_holiday = sales.pivot_table(values=&#34;weekly_sales&#34;, index=&#34;type&#34;, columns=&#34;is_holiday&#34;)
+
+# Print mean_sales_by_type_holiday
+print(mean_sales_by_type_holiday)</code></pre>
+      </google-codelab-step>
+
+      <google-codelab-step
+        label="Fill in missing values and sum values with pivot tables"
+        duration="0"
+      >
+        <pre><code># Print mean weekly_sales by department and type; fill missing values with 0
+print(sales.pivot_table(values=&#34;weekly_sales&#34;, index=&#34;department&#34;, columns=&#34;type&#34;, fill_value=0))</code></pre>
+        <pre><code># Print the mean weekly_sales by department and type; fill missing values with 0s; sum all rows and cols
+print(sales.pivot_table(values=&#34;weekly_sales&#34;, index=&#34;department&#34;, columns=&#34;type&#34;, fill_value=0, margins=True))</code></pre>
+      </google-codelab-step>
+    </google-codelab>
+
+    <script src="https://storage.googleapis.com/codelab-elements/native-shim.js"></script>
+    <script src="https://storage.googleapis.com/codelab-elements/custom-elements.min.js"></script>
+    <script src="https://storage.googleapis.com/codelab-elements/prettify.js"></script>
+    <script src="https://storage.googleapis.com/codelab-elements/codelab-elements.js"></script>
+  </body>
+</html>
